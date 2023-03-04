@@ -1,0 +1,133 @@
+Impact Wave Init
+
+    Events
+
+        Map initialization
+
+    Conditions
+
+    Actions
+
+        -------- ability --------
+
+        Set IX_Ability = Impact Wave
+
+        -------- damage --------
+
+        Set IX_AttackType = Normal
+
+        Set IX_DamageType = Normal
+
+        -------- area of effect --------
+
+        Set IX_AoE[1] = 100.00
+
+        Set IX_AoE[2] = 100.00
+
+        Set IX_AoE[3] = 100.00
+
+        Set IX_AoE[4] = 100.00
+
+        -------- maximum distance --------
+
+        Set IX_MaxDistance[1] = 500.00
+
+        Set IX_MaxDistance[2] = 500.00
+
+        Set IX_MaxDistance[3] = 500.00
+
+        Set IX_MaxDistance[4] = 500.00
+
+        -------- delay --------
+
+        Set IX_Delay[1] = 0.60
+
+        Set IX_Delay[2] = 0.60
+
+        Set IX_Delay[3] = 0.60
+
+        Set IX_Delay[4] = 0.60
+
+        -------- wave count --------
+
+        Set IX_WaveCount[1] = 3
+
+        Set IX_WaveCount[2] = 3
+
+        Set IX_WaveCount[3] = 3
+
+        Set IX_WaveCount[4] = 3
+
+        -------- absolute damage --------
+
+        Set IX_Absolute[1] = 75.00
+
+        Set IX_Absolute[2] = 125.00
+
+        Set IX_Absolute[3] = 175.00
+
+        Set IX_Absolute[4] = 225.00
+
+        -------- strength --------
+
+        Set IX_Strength[1] = 0.00
+
+        Set IX_Strength[2] = 0.00
+
+        Set IX_Strength[3] = 0.00
+
+        Set IX_Strength[4] = 0.00
+
+        -------- agility --------
+
+        Set IX_Agility[1] = 30.00
+
+        Set IX_Agility[2] = 30.00
+
+        Set IX_Agility[3] = 30.00
+
+        Set IX_Agility[4] = 30.00
+
+        -------- intelligence --------
+
+        Set IX_Intelligence[1] = 0.00
+
+        Set IX_Intelligence[2] = 0.00
+
+        Set IX_Intelligence[3] = 0.00
+
+        Set IX_Intelligence[4] = 0.00
+
+        -------- wave gap --------
+
+        Set IX_Gap[1] = 30.00
+
+        Set IX_Gap[2] = 30.00
+
+        Set IX_Gap[3] = 30.00
+
+        Set IX_Gap[4] = 30.00
+
+        -------- missle --------
+
+        Set IX_Offset = 150.00
+
+        Set IX_ImpactSfx = Abilities\Spells\Other\Doom\DoomDeath.mdl
+
+        Set IX_MissleSfx = Abilities\Weapons\FireBallMissile\FireBallMissile.mdl
+
+        Set IX_Hit = Environment\SmallBuildingFire\SmallBuildingFire2.mdl
+
+        -------- preload --------
+
+        Set IX_Point1 = (Random point in (Playable map area))
+
+        Unit - Create 1 Impact Wave Dummy for Neutral Passive at IX_Point1 facing Default building facing degrees
+
+        Unit - Add IX_Ability to (Last created unit)
+
+        Unit - Remove IX_Ability from (Last created unit)
+
+        Unit - Add a 0.01 second Generic expiration timer to (Last created unit)
+
+        Custom script:   call RemoveLocation(udg_IX_Point1)
