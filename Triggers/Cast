@@ -1,0 +1,159 @@
+Impact Wave Cast
+
+    Events
+
+        Unit - A unit Finishes casting an ability
+
+    Conditions
+
+        (Ability being cast) Equal to IX_Ability
+
+    Actions
+
+        --------   --------
+
+        -------- important values --------
+
+        --------   --------
+
+        Set IX_TempCaster = (Triggering unit)
+
+        Set IX_TempPlayer = (Triggering player)
+
+        Set IX_TempLevel = (Level of IX_Ability for IX_TempCaster)
+
+        --------   --------
+
+        -------- calculate damage --------
+
+        --------   --------
+
+        Set IX_TempStr = (((Real((Strength of IX_TempCaster (Include bonuses)))) x IX_Strength[IX_TempLevel]) x 0.01)
+
+        Set IX_TempAgi = (((Real((Agility of IX_TempCaster (Include bonuses)))) x IX_Agility[IX_TempLevel]) x 0.01)
+
+        Set IX_TempInt = (((Real((Intelligence of IX_TempCaster (Include bonuses)))) x IX_Intelligence[IX_TempLevel]) x 0.01)
+
+        Set IX_TempDamage = ((IX_TempStr + IX_TempAgi) + (IX_TempInt + IX_Absolute[IX_TempLevel]))
+
+        --------   --------
+
+        -------- speed and angle --------
+
+        --------   --------
+
+        Set IX_TempSpeed = (IX_MaxDistance[IX_TempLevel] / (IX_Delay[IX_TempLevel] / 0.03))
+
+        Set IX_StartAngle = (Facing of IX_TempCaster)
+
+        --------   --------
+
+        -------- determine where to place our projectile --------
+
+        --------   --------
+
+        Set IX_Point1 = (Position of IX_TempCaster)
+
+        Set IX_Point2 = (IX_Point1 offset by IX_Offset towards IX_StartAngle degrees)
+
+        --------   --------
+
+        Custom script:   call RemoveLocation(udg_IX_Point1)
+
+        --------   --------
+
+        Special Effect - Create a special effect at IX_Point2 using IX_ImpactSfx
+
+        Special Effect - Destroy (Last created special effect)
+
+        --------   --------
+
+        -------- for this part i get the initial angle then divide the number of waves by 2 --------
+
+        -------- then subtract the gap to slightly change the start angle --------
+
+        --------   --------
+
+        For each (Integer IX_TempLooper) from 1 to (IX_WaveCount[IX_TempLevel] / 2), do (Actions)
+
+            Loop - Actions
+
+                Set IX_StartAngle = (IX_StartAngle - IX_Gap[IX_TempLevel])
+
+        --------   --------
+
+        For each (Integer IX_TempLooper) from 1 to IX_WaveCount[IX_TempLevel], do (Actions)
+
+            Loop - Actions
+
+                --------   --------
+
+                -------- standard indexing --------
+
+                --------   --------
+
+                Set IX_Index = (IX_Index + 1)
+
+                --------   --------
+
+                Set IX_Caster[IX_Index] = IX_TempCaster
+
+                Set IX_Player[IX_Index] = IX_TempPlayer
+
+                Set IX_Level[IX_Index] = IX_TempLevel
+
+                --------   --------
+
+                -------- projectile settings --------
+
+                --------   --------
+
+                Set IX_IsValid[IX_Index] = True
+
+                Set IX_CurrentDistance[IX_Index] = 0.00
+
+                Set IX_Damage[IX_Index] = IX_TempDamage
+
+                --------   --------
+
+                Set IX_Speed[IX_Index] = IX_TempSpeed
+
+                Set IX_Angle[IX_Index] = IX_StartAngle
+
+                --------   --------
+
+                -------- notice here that the gap is added again to produce a fan shaped output --------
+
+                --------   --------
+
+                Set IX_StartAngle = (IX_StartAngle + IX_Gap[IX_TempLevel])
+
+                --------   --------
+
+                Unit - Create 1 Impact Wave Dummy for IX_Player[IX_Index] at IX_Point2 facing IX_Angle[IX_Index] degrees
+
+                Set IX_Missle[IX_Index] = (Last created unit)
+
+                --------   --------
+
+                Custom script:   call DestroyGroup(udg_IX_DamagedGroup[udg_IX_Index])
+
+                Custom script:   set udg_IX_DamagedGroup[udg_IX_Index]=CreateGroup()
+
+                --------   --------
+
+                If (All Conditions are True) then do (Then Actions) else do (Else Actions)
+
+                    If - Conditions
+
+                        IX_Index Equal to 1
+
+                    Then - Actions
+
+                        Trigger - Turn on Impact Wave Effect <gen>
+
+                    Else - Actions
+
+        --------   --------
+
+        Custom script:   call RemoveLocation(udg_IX_Point2)
