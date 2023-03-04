@@ -1,0 +1,185 @@
+Impact Wave Effect
+
+    Events
+
+        Time - Every 0.03 seconds of game time
+
+    Conditions
+
+    Actions
+
+        For each (Integer IX_Looper) from 1 to IX_Index, do (Actions)
+
+            Loop - Actions
+
+                --------   --------
+
+                -------- isvalid is a flag to determine when to deindex --------
+
+                --------   --------
+
+                If (All Conditions are True) then do (Then Actions) else do (Else Actions)
+
+                    If - Conditions
+
+                        IX_IsValid[IX_Looper] Equal to True
+
+                    Then - Actions
+
+                        --------   --------
+
+                        -------- check distance --------
+
+                        --------   --------
+
+                        If (All Conditions are True) then do (Then Actions) else do (Else Actions)
+
+                            If - Conditions
+
+                                IX_CurrentDistance[IX_Looper] Less than IX_MaxDistance[IX_Level[IX_Looper]]
+
+                            Then - Actions
+
+                                Set IX_CurrentDistance[IX_Looper] = (IX_CurrentDistance[IX_Looper] + IX_Speed[IX_Looper])
+
+                            Else - Actions
+
+                                Set IX_IsValid[IX_Looper] = False
+
+                        --------   --------
+
+                        -------- effects and damage --------
+
+                        --------   --------
+
+                        Set IX_Point1 = (Position of IX_Missle[IX_Looper])
+
+                        Special Effect - Create a special effect at IX_Point1 using IX_MissleSfx
+
+                        Special Effect - Destroy (Last created special effect)
+
+                        --------   --------
+
+                        Set IX_TempGroup = (Units within IX_AoE[IX_Level[IX_Looper]] of IX_Point1)
+
+                        Unit Group - Pick every unit in IX_TempGroup and do (Actions)
+
+                            Loop - Actions
+
+                                Set IX_Picked = (Picked unit)
+
+                                If (All Conditions are True) then do (Then Actions) else do (Else Actions)
+
+                                    If - Conditions
+
+                                        (IX_Picked is A structure) Equal to False
+
+                                        (IX_Picked is Magic Immune) Equal to False
+
+                                        (IX_Picked is Mechanical) Equal to False
+
+                                        (IX_Picked is alive) Equal to True
+
+                                        (IX_Picked belongs to an enemy of IX_Player[IX_Looper]) Equal to True
+
+                                        (IX_Picked is in IX_DamagedGroup[IX_Looper]) Equal to False
+
+                                    Then - Actions
+
+                                        Unit - Cause IX_Caster[IX_Looper] to damage IX_Picked, dealing IX_Damage[IX_Looper] damage of attack type IX_AttackType and damage type IX_DamageType
+
+                                        Special Effect - Create a special effect attached to the origin of IX_Picked using IX_Hit
+
+                                        Special Effect - Destroy (Last created special effect)
+
+                                        Unit Group - Add IX_Picked to IX_DamagedGroup[IX_Looper]
+
+                                    Else - Actions
+
+                        --------   --------
+
+                        Set IX_Point2 = (IX_Point1 offset by IX_Speed[IX_Looper] towards IX_Angle[IX_Looper] degrees)
+
+                        --------   --------
+
+                        -------- terrain check --------
+
+                        --------   --------
+
+                        If (All Conditions are True) then do (Then Actions) else do (Else Actions)
+
+                            If - Conditions
+
+                                (Terrain pathing at IX_Point2 of type Walkability is off) Equal to False
+
+                                ((Playable map area) contains IX_Point2) Equal to True
+
+                            Then - Actions
+
+                                Custom script:   call SetUnitY(udg_IX_Missle[udg_IX_Looper], GetLocationY(udg_IX_Point2))
+
+                                Custom script:   call SetUnitX(udg_IX_Missle[udg_IX_Looper], GetLocationX(udg_IX_Point2))
+
+                            Else - Actions
+
+                                Set IX_IsValid[IX_Looper] = False
+
+                        --------   --------
+
+                        Custom script:   call DestroyGroup(udg_IX_TempGroup)
+
+                        Custom script:   call RemoveLocation(udg_IX_Point1)
+
+                        Custom script:   call RemoveLocation(udg_IX_Point2)
+
+                        -------- - --------
+
+                    Else - Actions
+
+                        --------   --------
+
+                        -------- deindex --------
+
+                        --------   --------
+
+                        Set IX_DamagedGroup[IX_Looper] = IX_DamagedGroup[IX_Index]
+
+                        Set IX_Angle[IX_Looper] = IX_Angle[IX_Index]
+
+                        Set IX_Caster[IX_Looper] = IX_Caster[IX_Index]
+
+                        Set IX_CurrentDistance[IX_Looper] = IX_CurrentDistance[IX_Index]
+
+                        Set IX_Damage[IX_Looper] = IX_Damage[IX_Index]
+
+                        Set IX_IsValid[IX_Looper] = IX_IsValid[IX_Index]
+
+                        Set IX_Level[IX_Looper] = IX_Level[IX_Index]
+
+                        Unit - Add a 0.01 second Generic expiration timer to IX_Missle[IX_Looper]
+
+                        Set IX_Missle[IX_Looper] = IX_Missle[IX_Index]
+
+                        Set IX_Player[IX_Looper] = IX_Player[IX_Index]
+
+                        Set IX_Speed[IX_Looper] = IX_Speed[IX_Looper]
+
+                        -------- - --------
+
+                        Set IX_Looper = (IX_Looper - 1)
+
+                        Set IX_Index = (IX_Index - 1)
+
+                        -------- - --------
+
+                        If (All Conditions are True) then do (Then Actions) else do (Else Actions)
+
+                            If - Conditions
+
+                                IX_Index Equal to 0
+
+                            Then - Actions
+
+                                Trigger - Turn off (This trigger)
+
+                            Else - Actions
